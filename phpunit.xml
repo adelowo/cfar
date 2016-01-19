@@ -1,0 +1,22 @@
+<phpunit colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnFailure="true"
+         strict="true"
+         verbose="true"
+         bootstrap="tests/bootstrap.php">
+
+    <testsuites>
+        <testsuite>
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>./cfar/</directory>
+        </whitelist>
+    </filter>
+
+</phpunit>

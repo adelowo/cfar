@@ -163,11 +163,11 @@ class Cfar
 
         }
 
-        $namespace = $cfarConfig[self::CFAR_NS] ?: self::CFAR_GLOBAL;
+        $namespace = isset($cfarConfig[self::CFAR_NS]) ? $cfarConfig[self::CFAR_NS] :   self::CFAR_GLOBAL ;
 
         list($this->controller , $this->method) = $this->getControllerAndMethodValues($cfarConfig[self::CFAR_CONTROLLER]);
 
-        $this->method = $this->method ?: self::CFAR_DEFAULT_METHOD; //Check if the method to invoke is defined ? else we'd call the "indexAction" method.
+        $this->method = isset($this->method) ? $this->method : self::CFAR_DEFAULT_METHOD; //Check if the method to invoke is defined ? else we'd call the "indexAction" method.
 
         $this->controller = $namespace.$this->controller;
 

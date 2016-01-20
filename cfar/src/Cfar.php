@@ -145,10 +145,9 @@ class Cfar
 
     /**
      * Dispatches parameters to the invoked method.
-     * @param  array  $routeParameters An array of parameters captured during the routing process.
      * @return void
      */
-    public function dispatch(array $routeParameters)
+    public function dispatch()
     {
         $cfarConfig = $this->getCfarConfig();
 
@@ -171,9 +170,9 @@ class Cfar
 
         $this->controller = $namespace.$this->controller;
 
-        unset($routeParameters[self::CFAR]); //remove the cfar config to avoid passing dead parameters to the method.
+        $this->parameters = $this->auraRouter->getMatchedRoute()->params ;
 
-        $this->parameters = $routeParameters;
+        unset($this->parameters[self::CFAR]); //remove the cfar config to avoid passing dead parameters to the method.
 
         $this->getMethodToInvoke()
             ->invokeArgs(new $this->controller(), $this->parameters );

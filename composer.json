@@ -1,0 +1,24 @@
+{
+    "name" : "adelowo/cfar",
+    "type" : "library",
+    "description" : "Using Controllers with Aura.Router",
+    "keywords" : ["controller for aura router" , "aura router"],
+    "license" : "MIT",
+    "homepage" : "https://github.com/adelowo/cfar",
+    "authors" : [
+        {
+            "name" : "Adelowo Lanre",
+            "email": "me@adelowolanre.com",
+            "homepage" : "http://adelowolanre.com",
+            "role" : "Developer"
+        }
+    ],
+   	"require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "adelowo\\cfar\\" : "cfar/src/"
+        }
+    }
+}

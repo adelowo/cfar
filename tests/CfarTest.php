@@ -50,7 +50,7 @@ class CfarTest extends \PHPUnit_Framework_TestCase
             "name" => "adelowo"
         ];
 
-        $this->cfarInstance->dispatch($route->params);
+        $this->cfarInstance->dispatch();
 
         $this->assertEquals($expectedParameters , $this->cfarInstance->getParameters());
 
@@ -70,7 +70,7 @@ class CfarTest extends \PHPUnit_Framework_TestCase
 
         $route = $this->auraRouterInstance->match("/10/adelowo" , $this->server);
 
-        $this->cfarInstance->dispatch($route->params);
+        $this->cfarInstance->dispatch();
 
         $controller = $this->cfarInstance->getController();
 
@@ -90,7 +90,7 @@ class CfarTest extends \PHPUnit_Framework_TestCase
 
         $route = $this->auraRouterInstance->match("/10/adelowo" , $this->server);
 
-        $this->cfarInstance->dispatch($route->params);
+        $this->cfarInstance->dispatch();
 
         $controller = $this->cfarInstance->getController();
 

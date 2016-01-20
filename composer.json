@@ -18,7 +18,9 @@
     },
     "autoload": {
         "psr-4": {
-            "adelowo\\cfar\\" : "cfar/src/"
+            "adelowo\\cfar\\" : "cfar/src/",
+            "adelowo\\controller\\" : "tests/fixtures/",
+            "\\" : "tests/fixtures/"
         }
     }
 }

@@ -2,7 +2,7 @@
 
 error_reporting(E_ALL);
 
-$composer = dirname(dirname(__DIR__))."/vendor/autoload.php";
+$composer = dirname(__DIR__)."/vendor/autoload.php";
 
 if (!file_exists($composer)) {
     throw new Exception("It seems composer has not been installed as it's autoloader cannot be found, please run composer install");

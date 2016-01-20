@@ -1,5 +1,6 @@
 # CFAR - Controller for Aura Router
 
+![Build Status Images](https://travis-ci.org/adelowo/cfar.svg)
 This library was written to enable users of Aura.Router make use of symfony/laravel "type" controllers. I had a 3 day stint with the laravel framework and i liked the idea behind the controllers - even though i didn't end up using laravel - , i then decided to bring such a thing to my favourite router.
 
 ### Installation

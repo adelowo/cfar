@@ -6,7 +6,7 @@ This library was written to enable users of Aura.Router make use of symfony/lara
 
 You are recommended to make use of the latest available PHP version, but CFAR should run on >=5.3.
 
-CFAR has a dependency, which is [Aura.Router 2.x](https://github.com/auraphp/Aura.Router.
+CFAR has a dependency, which is Aura.Router 2.x
 
 Install CFAR via one of the following methods :
 
@@ -19,7 +19,7 @@ Install CFAR via one of the following methods :
 - Repo Cloning :
 
 ```bash
-    git clone https://github.com/adelowo/cfar
+    git clone https://github.com/adelowo/cfar.git
 ```
 
 - [Download a release](https://github.com/adelowo/cfar/releases)
@@ -49,12 +49,14 @@ $router->addValues(
 
 ```
 
-You can also leave the `@` in the controller key definition and Cfar would instead search for and invoke a default method called `indexAction`.
+You can also leave the `@` in the controller key definition and Cfar would instead search for ( and invoke ) a default method called `indexAction`.
 
-Below is a little snippet that shows Aura.Router and Cfar ***fully integrated***
+Below is a little snippet that shows Aura.Router and Cfar ***fully integrated***, an `index.php` file and controllers for the routes would be written.
 
 ```php
 <?php
+
+//filename : index.php
 
 use adelowo\cfar\Cfar;
 use adelowo\cfar\CfarException;
@@ -120,6 +122,39 @@ if ( !$route ) {
         echo $e->getMessage();
     }
 }   
+
+```
+
+> Parameters would be passed to the invoked method in the same order defined in the route.. A method for `/users/{id}/{name}` should have two parameters, where the first one would be passed the value captured by the router for `{id}` and viceversa
+
+```php
+
+<?php
+
+namespace adelowo\controller;
+
+class HomeController
+{
+
+    public function showUser($id , $param)
+    {
+        echo $id . PHP_EOL;
+        echo $param;
+    }
+
+    public function showPdf($name)
+    {
+
+            echo $name;
+    }
+
+    public function indexAction($id ,$name)
+    {
+        echo $id. PHP_EOL;
+        echo $name;
+    }
+}
+
 
 ```
 

@@ -8,7 +8,6 @@ php :
 
 before_script:
   - composer selfupdate
-  - composer require aura/router:2.3
   - composer install
 
 script : phpunit

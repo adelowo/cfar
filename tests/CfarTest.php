@@ -3,6 +3,7 @@
 namespace adelowo\cfar;
 
 require_once 'fixtures/GlobalController.php';
+require_once 'fixtures/HomeController.php';
 
 use adelowo\cfar\Cfar;
 use Aura\Router\RouterFactory;

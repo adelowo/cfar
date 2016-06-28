@@ -30,7 +30,7 @@ Install CFAR via one of the following methods :
 
 ### Usage
 
-Cfar doesn't require any special config - other than specify the class that acts as your controller (namespaced) and method to invoke - you'd still write your routes as specified in Aura.Router's (2.x) doc.
+Cfar doesn't require any special config - other than specifying the class that acts as your controller (namespaced) and method to invoke - you'd still write your routes as specified in Aura.Router's (2.x) doc.
 
 In the `addValues()` method provided by Aura.Router, you have to add an array named `cfar` which must contain at least one key which is the `controller`.
 

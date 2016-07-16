@@ -7,7 +7,7 @@ This library was written to enable users of Aura.Router make use of symfony/lara
 
 You are recommended to make use of the latest available PHP version, but CFAR should run on >=5.5.
 
-CFAR has a dependency, which is Aura.Router 3.x
+CFAR has a dependency, which is Aura.Router 3.x . If you are still using Aura.Router 2.x, please install 0.x
 
 Install CFAR via one of the following methods :
 

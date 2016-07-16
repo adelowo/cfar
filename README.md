@@ -1,20 +1,20 @@
 # CFAR - Controller for Aura Router
 
 ![Build Status Images](https://travis-ci.org/adelowo/cfar.svg)
-This library was written to enable users of Aura.Router make use of symfony/laravel "type" controllers. I had a 3 day stint with the laravel framework and i liked the idea behind the controllers - even though i didn't end up using laravel - , i then decided to bring such a thing to my favourite router.
+This library was written to enable users of Aura.Router make use of symfony/laravel "type" controllers.
 
 ### Installation
 
-You are recommended to make use of the latest available PHP version, but CFAR should run on >=5.3.
+You are recommended to make use of the latest available PHP version, but CFAR should run on >=5.5.
 
-CFAR has a dependency, which is Aura.Router 2.x
+CFAR has a dependency, which is Aura.Router 3.x
 
 Install CFAR via one of the following methods :
 
 - [Composer](https://getcomposer.org) :
 
 ```bash
-    composer require adelowo/cfar
+    composer require "adelowo/cfar" : "^1.0"
 ```
 
 - Repo Cloning :
@@ -25,32 +25,18 @@ Install CFAR via one of the following methods :
 
 - [Download a release](https://github.com/adelowo/cfar/releases)
 
-> If downloading the library without composer, you'd have to write an autoloader yourself
+> If downloading the library without composer or cloning directly from the repository, you'd have to write an autoloader yourself
 
 
 ### Usage
 
-Cfar doesn't require any special config - other than specifying the class that acts as your controller (namespaced) and method to invoke - you'd still write your routes as specified in Aura.Router's (2.x) doc.
+Cfar doesn't require any special config - other than specifying the class that acts as your controller (namespaced) and method to invoke - you'd still write your routes as specified in Aura.Router's (3.x) doc.
 
-In the `addValues()` method provided by Aura.Router, you have to add an array named `cfar` which must contain at least one key which is the `controller`.
-
-The `cfar` array can optionally contain a `namespace` key - if your controller lives under a namespace. If a namespace key isn't provided, Cfar would assume the controller class lives in the global namespace .
+Aura.Router 3 is a big improvement to the much loved router with it being broken into many parts such as a Mapper, Matcher, Route (that contains the matched route).
 
 > Internally, Cfar uses PHP's Reflection Api.
 
-```php
-<?php
-
-$router->addValues(
-[ "cfar" => [
-    "namespace" => "adelowo\\controller\\" ,
-    "controller" => "HomeController@showUser"
-]]);
-
-
-```
-
-You can also leave the `@` in the controller key definition and Cfar would instead search for ( and invoke ) a default method called `indexAction`.
+> By default, Cfar would search and invoke a method called `indexAction`
 
 Below is a little snippet that shows Aura.Router and Cfar ***fully integrated***, an `index.php` file and controllers for the routes would be written.
 
@@ -59,71 +45,56 @@ Below is a little snippet that shows Aura.Router and Cfar ***fully integrated***
 
 //filename : index.php
 
-use adelowo\cfar\Cfar;
-use adelowo\cfar\CfarException;
+use Aura\Router\RouterContainer;
 
-require_once 'vendor/autoload.php';
+require_once "vendor/autoload.php";
 
-$router_factory = new Aura\Router\RouterFactory();
+$routeContainer = new RouterContainer();
 
-$router = $router_factory->newInstance();
-
-$router->addGet(null, '/')
-    ->addValues(
-    ["cfar" => [
-        "controller" => "GlobalController@showAllUsers" //GlobalController would be loaded from the global namespace
-    ]]);
-
-$router->addGet(null , '/user/{id}/{name}')
-    ->addTokens(["id" => "\d+" , "name" => "\w+"])
-    ->addValues(
-    [ "cfar" => [
-        "namespace" => "adelowo\\controller\\" ,
-        "controller" => "HomeController@showUser" //Namespaced controller with showUser() invoked
-    ]]);
-
-$router->addGet(null , '/{id}/{name}')
-    ->addTokens(["id" => "\d+" , "name" => "\w+"])
-    ->addValues(
-    [ "cfar" => [
-        "namespace" => "adelowo\\controller\\" ,
-        "controller" => "HomeController" //Namespaced controller whose method implementation would default to indexAction.
-    ]]);
+$routeMapper = $routeContainer->getMap();
 
 
-$router->addGet(null, '/login');
+$routeMapper->get('blog.read', '/blog/{id}/{name}')
+	->handler(\adelowo\controller\BlogController::class)
+	->extras([
+		"listener" => "show" // the method to be invoked, if this is not found,`indexAction` would be invoked.
+	]);
 
-$router->addGet(null , '/pdf/{name}')
-    ->addTokens(["name" => "\w+"])
-    ->addValues(
-    [ "cfar" => [
-        "namespace" => "adelowo\\controller\\" ,
-        "controller" => "HomeController@showPdf"
-    ]]);
+$routeMapper->get(null, "/")
+	->handler(GlobeController::class)
+	->extras([
+		"listener" => "oops"
+	]);
+
+$routeMatcher = $routeContainer->getMatcher();
 
 
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$request = Zend\Diactoros\ServerRequestFactory::fromGlobals(
+	$_SERVER,
+	$_GET,
+	$_POST,
+	$_COOKIE,
+	$_FILES
+);
 
-server
-$route = $router->match($path, $_SERVER);
+$matched = $routeMatcher->match($request);
 
-if ( !$route ) {
+if (!$matched) {
+	throw new \Aura\Router\Exception("Route does not exists");
+}
 
-    throw new \Exception("No route found");
+foreach ($matched->attributes as $key => $val) {
+	$request = $request->withAttribute($key, $val);
+}
 
-} else {
+try {
+	$cfar = new \adelowo\cfar\Cfar($matched); //pass Cfar the matched route.
 
-    $cfar = new Cfar($router); //pass Cfar the router instance. This is used internally to get the matched route and values that have captured for the route.
+	$cfar->dispatch();
 
-    try {
-
-        $cfar->dispatch(); //Doing the deed
-
-    } catch (CfarException $e) {
-        echo $e->getMessage();
-    }
-}   
-
+} catch (\adelowo\cfar\CfarException $exception) {
+	echo $exception->getMessage();
+}
 ```
 
 > Parameters would be passed to the invoked method in the same order defined in the route.. A method for `/users/{id}/{name}` should have two parameters, where the first one would be passed the value captured by the router for `{id}` and viceversa
@@ -134,7 +105,7 @@ if ( !$route ) {
 
 namespace adelowo\controller;
 
-class HomeController
+class BlogController
 {
 
     public function showUser($id , $param)

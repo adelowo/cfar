@@ -1,10 +1,11 @@
 <?php
-namespace adelowo\controller;
+
+namespace Adelowo\Controller;
 
 class HomeController
 {
 
-    public function showUser($id , $param)
+    public function showUser($id, $param)
     {
         //do something with $id and $param;
     }
@@ -12,12 +13,11 @@ class HomeController
     public function showPdf($name)
     {
 
-            echo $name;
+        echo $name;
     }
 
-    public function indexAction($id , $name)
+    public function indexAction()
     {
-        echo $id. PHP_EOL;
-        echo $name;
+        //
     }
 }

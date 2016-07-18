@@ -3,7 +3,7 @@
 class GlobalController
 {
 
-    public function indexAction($id , $username)
+    public function indexAction()
     {
         //do something
     }

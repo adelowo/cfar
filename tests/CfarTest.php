@@ -14,17 +14,6 @@ use Zend\Diactoros\ServerRequestFactory;
 
 class CfarTest extends \PHPUnit_Framework_TestCase
 {
-<<<<<<< HEAD
-    public function setUp()
-    {
-
-    }
-
-    public function tearDown()
-    {
-
-    }
-=======
 
     /**
      * @var Route
@@ -80,6 +69,4 @@ class CfarTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf($controller, new $cfarController);
         $this->assertEquals(Cfar::CFAR_DEFAULT_METHOD, $this->cfar->getMethod());
     }
-
->>>>>>> heads/1.0
 }

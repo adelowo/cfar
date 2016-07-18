@@ -1,6 +1,6 @@
 <?php
 
-namespace adelowo\cfar;
+namespace Adelowo\Cfar;
 
 /**
  * @author Adelowo Lanre

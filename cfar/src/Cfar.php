@@ -110,12 +110,8 @@ class Cfar
     {
         return [
             $this->matchedRoute->handler,
-<<<<<<< HEAD
-            ($this->matchedRoute->extras['listener'] ?: self::CFAR_DEFAULT_METHOD)
-=======
             array_key_exists('listener',
                 $this->matchedRoute->extras) ? $this->matchedRoute->extras['listener'] : self::CFAR_DEFAULT_METHOD
->>>>>>> heads/1.0
         ];
     }
 

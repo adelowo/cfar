@@ -117,13 +117,12 @@ class Cfar
 
     /**
      * @return bool
-     * @throws \adelowo\cfar\CfarException
+     * @throws CfarException if the class can't be called
      */
     protected function doesRouteHaveAValidDeclaration()
     {
-        $handler = $this->matchedRoute->handler;
 
-        if ($validClass = $this->getReflectionClass($handler)) {
+        if ($this->getReflectionClass($this->matchedRoute->handler)) {
             return true;
         }
 

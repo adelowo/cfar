@@ -1,6 +1,6 @@
 <?php
 
-namespace adelowo\cfar;
+namespace Adelowo\Cfar;
 
 require_once 'fixtures/GlobalController.php';
 require_once 'fixtures/HomeController.php';
@@ -14,13 +14,13 @@ use Zend\Diactoros\ServerRequestFactory;
 
 class CfarTest extends \PHPUnit_Framework_TestCase
 {
-	public function setUp()
-	{
+    public function setUp()
+    {
 
-	}
+    }
 
-	public function tearDown()
-	{
-		
-	}
+    public function tearDown()
+    {
+
+    }
 }

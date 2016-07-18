@@ -28,6 +28,7 @@ class CfarTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->route = new Route();
+        parent::setUp();
     }
 
     protected function getCfar(Route $route)
@@ -41,24 +42,32 @@ class CfarTest extends \PHPUnit_Framework_TestCase
     }
 
 
-    public function testCfarDispatchesExpectedParameters()
+    public function testCfarInvokesTheRightMethodAndInjectsTheExpectedParameters()
     {
-        $this->route->path('/users/10/adelowo')
+        $route = $this->route->path('/users/10/adelowo')
             ->attributes(["10", "adelowo"])
             ->handler(HomeController::class)
             ->extras(["listener" => "showUser"]);
 
-        $this->getCfar($this->route)->dispatch();
+        $this->getCfar($route)->dispatch();
 
-        $this->assertSame($this->route->attributes, $this->cfar->getParameters());
+        $this->assertEquals("showUser", $this->cfar->getMethod());
+        $this->assertEquals($route->attributes, $this->cfar->getParameters());
     }
 
-    public function testCfarCallsRightController()
+    public function testCfarCallsRightControllerAndDispatchesToTheDefaultMethod()
     {
-        $this->route->path("users")
+        $controller = '\\Adelowo\\Controller\\HomeController';
+
+        $route = $this->route->path("users")
             ->attributes([])
-            ->handler("")
-            ->extras()
+            ->handler($controller);
+
+        $this->getCfar($route)->dispatch();
+        $cfarController = $this->cfar->getController();
+
+        $this->assertInstanceOf($controller, new $cfarController);
+        $this->assertEquals(Cfar::CFAR_DEFAULT_METHOD, $this->cfar->getMethod());
     }
 
 }

@@ -88,12 +88,12 @@ foreach ($matched->attributes as $key => $val) {
 }
 
 try {
-	$cfar = new \adelowo\cfar\Cfar($matched); //pass Cfar the matched route.
+    $cfar = new \Adelowo\Cfar\Cfar($matched);
 
-	$cfar->dispatch();
+    $cfar->dispatch();
 
 } catch (\adelowo\cfar\CfarException $exception) {
-	echo $exception->getMessage();
+    echo $exception->getMessage();
 }
 ```
 
@@ -103,7 +103,7 @@ try {
 
 <?php
 
-namespace adelowo\controller;
+namespace Adelowo\Controller;
 
 class BlogController
 {

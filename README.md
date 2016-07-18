@@ -92,7 +92,7 @@ try {
 
     $cfar->dispatch();
 
-} catch (\adelowo\cfar\CfarException $exception) {
+} catch (\Adelowo\Cfar\CfarException $exception) {
     echo $exception->getMessage();
 }
 ```

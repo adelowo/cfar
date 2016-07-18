@@ -5,7 +5,7 @@
          stopOnFailure="true"
          strict="true"
          verbose="true"
-         bootstrap="tests/bootstrap.php">
+         bootstrap="vendor/autoload.php">
 
     <testsuites>
         <testsuite>

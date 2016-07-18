@@ -1,6 +1,6 @@
 <?php
 
-namespace adelowo\cfar;
+namespace Adelowo\Cfar;
 
 require_once 'fixtures/GlobalController.php';
 require_once 'fixtures/HomeController.php';
@@ -14,13 +14,51 @@ use Zend\Diactoros\ServerRequestFactory;
 
 class CfarTest extends \PHPUnit_Framework_TestCase
 {
-	public function setUp()
-	{
 
-	}
+    /**
+     * @var Route
+     */
+    protected $route;
 
-	public function tearDown()
-	{
-		
-	}
+    /**
+     * @var Cfar
+     */
+    protected $cfar;
+
+    public function setUp()
+    {
+        $this->route = new Route();
+    }
+
+    protected function getCfar(Route $route)
+    {
+        return $this->cfar = new Cfar($route);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+    }
+
+
+    public function testCfarDispatchesExpectedParameters()
+    {
+        $this->route->path('/users/10/adelowo')
+            ->attributes(["10", "adelowo"])
+            ->handler(HomeController::class)
+            ->extras(["listener" => "showUser"]);
+
+        $this->getCfar($this->route)->dispatch();
+
+        $this->assertSame($this->route->attributes, $this->cfar->getParameters());
+    }
+
+    public function testCfarCallsRightController()
+    {
+        $this->route->path("users")
+            ->attributes([])
+            ->handler("")
+            ->extras()
+    }
+
 }

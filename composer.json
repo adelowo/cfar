@@ -22,7 +22,7 @@
   },
   "autoload": {
     "psr-4": {
-      "adelowo\\cfar\\": "cfar/src/"
+      "Adelowo\\Cfar\\": "cfar/src/"
     }
   },
   "require-dev": {
@@ -32,7 +32,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "adelowo\\cfar\\": "tests"
+      "Adelowo\\Cfar\\": "tests"
     }
   },
   "scripts": {

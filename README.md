@@ -14,7 +14,7 @@ Install CFAR via one of the following methods :
 - [Composer](https://getcomposer.org) :
 
 ```bash
-    composer require "adelowo/cfar" : "^1.0"
+    composer require "adelowo/cfar" : "^1.0.0"
 ```
 
 - Repo Cloning :

@@ -5,6 +5,7 @@
 [![Build Status](https://img.shields.io/travis/adelowo/cfar/master.svg?style=flat-square)](https://travis-ci.org/adelowo/cfar)
 [![Scrutinizer Coverage](https://img.shields.io/scrutinizer/coverage/g/adelowo/cfar.svg?maxAge=2592000&style=flat-square)](https://scrutinizer-ci.com/g/adelowo/cfar/?branch=master)
 [![Quality Score](https://img.shields.io/scrutinizer/g/adelowo/cfar.svg?style=flat-square)](https://scrutinizer-ci.com/g/adelowo/cfar)
+[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/09ff34ee-feb3-49c0-acbc-52781179deb9.svg?style=flat-square)](https://insight.sensiolabs.com/projects/09ff34ee-feb3-49c0-acbc-52781179deb9)
 [![Total Downloads](https://img.shields.io/packagist/dt/adelowo/cfar.svg?style=flat-square)](https://packagist.org/packages/adelowo/cfar)
 
 This library was written to enable users of Aura.Router make use of symfony/laravel "type" controllers.

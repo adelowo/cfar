@@ -79,16 +79,9 @@ class Cfar
     }
 
     /**
-     * Gets information about the method that is to be invoked.
-     * @return \ReflectionMethod
+     * Calls the controller associated with the route and invoke the specified method.
+     * @return void
      */
-    protected function getMethodToInvoke()
-    {
-        $reflection = new \ReflectionClass($this->controller);
-
-        return $reflection->getMethod($this->method);
-    }
-
     public function dispatch()
     {
         $this->doesRouteHaveAValidDeclaration();

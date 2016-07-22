@@ -1,16 +1,18 @@
 <?php
 
-namespace Adelowo\Cfar;
+namespace Adelowo\Cfar\Tests;
 
-require_once 'fixtures/GlobalController.php';
-require_once 'fixtures/HomeController.php';
+require_once 'Fixtures/GlobalController.php';
+require_once 'Fixtures/HomeController.php';
 
-use adelowo\controller\HomeController;
+use Adelowo\Cfar\Cfar;
 use Aura\Router\Map;
-use Aura\Router\Matcher;
 use Aura\Router\Route;
+use Aura\Router\Matcher;
+use Adelowo\Cfar\CfarException;
 use Aura\Router\RouterContainer;
 use Zend\Diactoros\ServerRequestFactory;
+use Adelowo\Cfar\Tests\Fixtures\HomeController;
 
 class CfarTest extends \PHPUnit_Framework_TestCase
 {
@@ -57,7 +59,7 @@ class CfarTest extends \PHPUnit_Framework_TestCase
 
     public function testCfarCallsRightControllerAndDispatchesToTheDefaultMethod()
     {
-        $controller = '\\Adelowo\\Controller\\HomeController';
+        $controller = '\\Adelowo\\Cfar\\Tests\\Fixtures\\HomeController';
 
         $route = $this->route->path("users")
             ->attributes([])
@@ -69,4 +71,18 @@ class CfarTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf($controller, new $cfarController);
         $this->assertEquals(Cfar::CFAR_DEFAULT_METHOD, $this->cfar->getMethod());
     }
+
+    /**
+     * @expectedException \ReflectionException
+     */
+    public function testCfarThrowsReflectionException()
+    {
+        $route = $this->route->path('/users/10/adelowo')
+            ->attributes(["10", "adelowo"])
+            ->handler(UnKnownController::class)
+            ->extras(["listener" => "showUser"]);
+
+        $this->getCfar($route)->dispatch();
+    }
+
 }

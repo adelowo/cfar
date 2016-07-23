@@ -100,7 +100,7 @@ try {
     $cfar->dispatch();
 
 } catch (\Adelowo\Cfar\CfarException $exception) {
-    echo $exception->getMessage();
+    echo $exception; //__toString() was implemented
 }
 ```
 

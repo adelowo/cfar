@@ -2,8 +2,6 @@
 
 namespace Adelowo\Cfar\Tests;
 
-require_once 'Fixtures/GlobalController.php';
-require_once 'Fixtures/HomeController.php';
 
 use Adelowo\Cfar\Cfar;
 use Aura\Router\Map;
@@ -72,17 +70,18 @@ class CfarTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Cfar::CFAR_DEFAULT_METHOD, $this->cfar->getMethod());
     }
 
-    /**
-     * @expectedException \ReflectionException
-     */
-    public function testCfarThrowsReflectionException()
+    public function testCfarExceptionisThrown()
     {
         $route = $this->route->path('/users/10/adelowo')
             ->attributes(["10", "adelowo"])
             ->handler(UnKnownController::class)
             ->extras(["listener" => "showUser"]);
 
-        $this->getCfar($route)->dispatch();
+        try {
+            $this->getCfar($route)->dispatch();
+        } catch (CfarException $e) {
+            $this->assertStringStartsWith("Invalid route declaration", $e->__toString());
+        }
     }
 
 }

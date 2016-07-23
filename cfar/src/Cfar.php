@@ -6,7 +6,7 @@ use Aura\Router\Route;
 
 /**
  * CFAR -- Controller for Aura.Router
- * @author Adelowo Lanre <me@adelowolanre.com>
+ * @author Lanre Adelowo <me@adelowolanre.com>
  * Allows you to use controllers and methods (laravel/symfony style) for `Aura.Router` 3.x.
  * If you still make use of `Aura.Router` 2.x, please see the <= 0.2.* releases
  */
@@ -80,20 +80,25 @@ class Cfar
 
     /**
      * Calls the controller associated with the route and invoke the specified method.
-     * @return void
+     * @throws \Adelowo\Cfar\CfarException if the class cannot be be found
      */
     public function dispatch()
     {
-        $this->doesRouteHaveAValidDeclaration();
+        try {
 
-        list($this->controller, $this->method) = $this->getRegisteredControllerAndMethod();
+            $this->doesRouteHaveAValidDeclaration();
 
-        $this->parameters = $this->matchedRoute->attributes;
+            list($this->controller, $this->method) = $this->getRegisteredControllerAndMethod();
 
-        $this->getReflectionClass($this->controller)
-            ->getMethod($this->method)
-            ->invokeArgs(new $this->controller, $this->parameters);
+            $this->parameters = $this->matchedRoute->attributes;
 
+            $this->getReflectionClass($this->controller)
+                ->getMethod($this->method)
+                ->invokeArgs(new $this->controller, $this->parameters);
+
+        } catch (\ReflectionException $e) {
+            throw new CfarException($e->getMessage());
+        }
     }
 
     /**
@@ -109,17 +114,11 @@ class Cfar
     }
 
     /**
-     * @return bool
-     * @throws CfarException if the class can't be called
+     * @return \ReflectionClass
      */
     protected function doesRouteHaveAValidDeclaration()
     {
-
-        if ($this->getReflectionClass($this->matchedRoute->handler)) {
-            return true;
-        }
-
-        throw new CfarException("Invalid Route Declaration");
+        return $this->getReflectionClass($this->matchedRoute->handler);
     }
 
 

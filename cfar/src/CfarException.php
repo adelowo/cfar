@@ -19,6 +19,6 @@ class CfarException extends \Exception
 
     public function __toString()
     {
-        return self::INVALID_DECLARATION . ". The " . $this->getMessage();
+        return self::INVALID_DECLARATION.". The ".$this->getMessage();
     }
 }

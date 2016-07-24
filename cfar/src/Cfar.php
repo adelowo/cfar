@@ -85,7 +85,6 @@ class Cfar
     public function dispatch()
     {
         try {
-
             $this->doesRouteHaveAValidDeclaration();
 
             list($this->controller, $this->method) = $this->getRegisteredControllerAndMethod();
@@ -95,9 +94,8 @@ class Cfar
             $this->getReflectionClass($this->controller)
                 ->getMethod($this->method)
                 ->invokeArgs(new $this->controller, $this->parameters);
-
         } catch (\ReflectionException $e) {
-            throw new CfarException($e->getMessage());
+            throw new CfarException(CfarException::INVALID_DECLARATION . ". " . $e->getMessage());
         }
     }
 
@@ -108,8 +106,10 @@ class Cfar
     {
         return [
             $this->matchedRoute->handler,
-            array_key_exists('listener',
-                $this->matchedRoute->extras) ? $this->matchedRoute->extras['listener'] : self::CFAR_DEFAULT_METHOD
+            array_key_exists(
+                'listener',
+                $this->matchedRoute->extras
+            ) ? $this->matchedRoute->extras['listener'] : self::CFAR_DEFAULT_METHOD
         ];
     }
 

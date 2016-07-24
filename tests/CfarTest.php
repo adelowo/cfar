@@ -80,7 +80,7 @@ class CfarTest extends \PHPUnit_Framework_TestCase
         try {
             $this->getCfar($route)->dispatch();
         } catch (CfarException $e) {
-            $this->assertStringStartsWith("Invalid route declaration", $e->__toString());
+            $this->assertStringStartsWith("Invalid route declaration", $e->getMessage());
         }
     }
 

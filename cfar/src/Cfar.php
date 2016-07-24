@@ -95,7 +95,7 @@ class Cfar
                 ->getMethod($this->method)
                 ->invokeArgs(new $this->controller, $this->parameters);
         } catch (\ReflectionException $e) {
-            throw new CfarException(CfarException::INVALID_DECLARATION . ". " . $e->getMessage());
+            throw new CfarException(CfarException::INVALID_DECLARATION.". ".$e->getMessage());
         }
     }
 

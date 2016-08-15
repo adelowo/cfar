@@ -8,12 +8,6 @@ namespace Adelowo\Cfar;
 class CfarException extends \Exception
 {
 
-    protected $message;
-
     const INVALID_DECLARATION = "Invalid route declaration";
 
-    public function __construct($message)
-    {
-        $this->message = $message;
-    }
 }

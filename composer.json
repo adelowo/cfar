@@ -18,7 +18,8 @@
   ],
   "require": {
     "php": "~5.5|~7.0",
-    "aura/router": "^3.0"
+    "aura/router": "^3.0",
+    "container-interop/container-interop": "^1.1"
   },
   "autoload": {
     "psr-4": {
@@ -37,6 +38,9 @@
   },
   "scripts": {
     "test": "phpunit"
+  },
+  "suggest": {
+    "pimple/pimple": "A lightweight container that works (~3.0)"
   },
   "extra": {
     "branch-alias": {

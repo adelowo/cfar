@@ -10,11 +10,13 @@
 
 This library was written to enable users of Aura.Router make use of symfony/laravel "type" controllers.
 
+#### Already using CFAR , Migrate to: [1.2](migration-to-1.2.md)
+
 ### Installation
 
 You are recommended to make use of the latest available PHP version, but CFAR should run on >=5.5.
 
-CFAR has a dependency, which is Aura.Router 3.x . If you are still using Aura.Router 2.x, please install 0.x
+CFAR has a dependency, which is Aura.Router. >=1.0 releases require Aura.Router 3.x while <=0.2.1 requires Aura.Router 2.x .
 
 Install CFAR via one of the following methods :
 
@@ -23,6 +25,13 @@ Install CFAR via one of the following methods :
 ```bash
     composer require "adelowo/cfar" : "~1.0"
 ```
+
+> If you are still using Aura.Router 2.x, please install 0.x
+
+```bash
+    composer require "adelowo/cfar" : "~0.2"
+```
+
 
 - Repo Cloning :
 
@@ -61,17 +70,16 @@ $routeContainer = new RouterContainer();
 $routeMapper = $routeContainer->getMap();
 
 
-$routeMapper->get('blog.read', '/blog/{id}/{name}')
-	->handler(\adelowo\controller\BlogController::class)
-	->extras([
-		"listener" => "show" // the method to be invoked, if this is not found,`indexAction` would be invoked.
-	]);
+$routeMapper->get('blog.read', '/blog/{ide}')
+    ->handler('\Http\controller\BlogController@show');
 
 $routeMapper->get(null, "/")
-	->handler(GlobeController::class)
-	->extras([
-		"listener" => "oops"
-	]);
+    ->handler('\Http\controller\BlogController');
+
+$routeMapper->get('dev', '/dev');
+
+$routeMapper->get(null,'/error')
+    ->handler('\Http\controller\ErrorController'); //`indexAction` would be the invoked method
 
 $routeMatcher = $routeContainer->getMatcher();
 
@@ -94,8 +102,52 @@ foreach ($matched->attributes as $key => $val) {
 	$request = $request->withAttribute($key, $val);
 }
 
+
+/**
+ * This is totally optional. But you could use some "Control Inverting", than have `new` wrap all lines of your code
+*`SomeContainer` implement `Interop\Container\ContainerInterface`.;
+* A neat way to do this is to extend your choosen container and have the `get` method exposed by the interface retrieve the service from the container.
+* @see https://github.com/slimphp/slim/
+*/
+$container = new SomeContainer(); 
+
+//Add an ORM, Doctrine in this case.
+$container['db'] = function ($container) {
+    
+    $paths = array("/src/Entities");
+    
+    $isDevMode = false;
+
+    $dbParams = [
+        'driver' => 'pdo_mysql',
+        'user' => 'root',
+        'password' => 'xx-xxx-xx-xx',
+        'dbname' => 'foo',
+    ];
+    
+    $config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+    
+    return \Doctrine\ORM\EntityManager::create($dbParams, $config);    
+};
+
+//You def' need a logger
+$container['logger'] = function ($container) {
+
+    $logger = new \Monolog\Logger("Your App Name");
+    
+    $handler = new \Monolog\Handler\SyslogHandler('Owambe');
+    $handler->setFormatter(new \Monolog\Formatter\LineFormatter());
+    
+    $logger->pushHandler($handler);
+
+    return $logger;
+};
+
+//register X,Y,Z services 
+
 try {
-    $cfar = new \Adelowo\Cfar\Cfar($matched);
+
+    $cfar = new \Adelowo\Cfar\Cfar($matched , $container);
 
     $cfar->dispatch();
 
@@ -103,8 +155,9 @@ try {
     echo $exception->getMessage(); 
 }
 ```
+> The constructor of the controller would always receive a container. Might be null or a valid one. Your call.
 
-> Parameters would be passed to the invoked method in the same order defined in the route.. A method for `/users/{id}/{name}` should have two parameters, where the first one would be passed the value captured by the router for `{id}` and viceversa
+> Parameters would be passed to the invoked method in the same order defined in the route.. A method for `/users/{id}/{name}` should have two parameters, where the first one would be passed the value captured by the router for `{id}` and vice-versa
 
 ```php
 
@@ -115,10 +168,19 @@ namespace Adelowo\Controller;
 class BlogController
 {
 
+    protected $container;
+    
+    public function __construct(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
     public function showUser($id , $param)
     {
-        echo $id . PHP_EOL;
-        echo $param;
+        $db = $this->container->get('db');
+        
+        $data = $db->find("User" , $id);
+        
+        var_dump($data);
     }
 
     public function showPdf($name)

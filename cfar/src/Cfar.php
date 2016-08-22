@@ -3,6 +3,7 @@
 namespace Adelowo\Cfar;
 
 use Aura\Router\Route;
+use Interop\Container\ContainerInterface;
 
 /**
  * CFAR -- Controller for Aura.Router
@@ -18,6 +19,12 @@ class Cfar
      * @var string
      */
     const CFAR_DEFAULT_METHOD = 'indexAction';
+
+    /**
+     * "\SomeClass@method"
+     * @var string
+     */
+    const SEPARATOR = "@";
 
     /**
      * Aura.Router Instance
@@ -44,11 +51,19 @@ class Cfar
     protected $parameters;
 
     /**
-     * @param Route $router
+     * Bring your own container to the party
+     * @var \Interop\Container\ContainerInterface|null
      */
-    public function __construct(Route $router)
+    protected $container;
+
+    /**
+     * @param \Aura\Router\Route                         $router
+     * @param \Interop\Container\ContainerInterface|null $container
+     */
+    public function __construct(Route $router, ContainerInterface $container = null)
     {
         $this->matchedRoute = $router;
+        $this->container = $container;
     }
 
     /**
@@ -85,17 +100,22 @@ class Cfar
     public function dispatch()
     {
         try {
-            $this->doesRouteHaveAValidDeclaration();
 
             list($this->controller, $this->method) = $this->getRegisteredControllerAndMethod();
+
 
             $this->parameters = $this->matchedRoute->attributes;
 
             $this->getReflectionClass($this->controller)
                 ->getMethod($this->method)
-                ->invokeArgs(new $this->controller, $this->parameters);
+                ->invokeArgs(
+                    new $this->controller($this->container),
+                    $this->parameters
+                );
+
         } catch (\ReflectionException $e) {
-            throw new CfarException(CfarException::INVALID_DECLARATION.". ".$e->getMessage());
+            throw new CfarException(
+                CfarException::INVALID_DECLARATION . ". " . $e->getMessage());
         }
     }
 
@@ -104,23 +124,17 @@ class Cfar
      */
     protected function getRegisteredControllerAndMethod()
     {
-        return [
-            $this->matchedRoute->handler,
-            array_key_exists(
-                'listener',
-                $this->matchedRoute->extras
-            ) ? $this->matchedRoute->extras['listener'] : self::CFAR_DEFAULT_METHOD
-        ];
-    }
+        $value = explode(self::SEPARATOR, $this->matchedRoute->handler);
 
-    /**
-     * @return \ReflectionClass
-     */
-    protected function doesRouteHaveAValidDeclaration()
-    {
-        return $this->getReflectionClass($this->matchedRoute->handler);
-    }
+        if (count($value) === 2) { //if a method was specified by the `@` delimiter
+            return $value;
+        }
 
+        $value[1] = self::CFAR_DEFAULT_METHOD; //make `indexAction` the default if no method was specified
+
+        return $value;
+
+    }
 
     /**
      * @param $class string|object The class to resolve

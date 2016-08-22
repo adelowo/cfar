@@ -46,8 +46,7 @@ class CfarTest extends \PHPUnit_Framework_TestCase
     {
         $route = $this->route->path('/users/10/adelowo')
             ->attributes(["10", "adelowo"])
-            ->handler(HomeController::class)
-            ->extras(["listener" => "showUser"]);
+            ->handler('\Adelowo\Cfar\Tests\Fixtures\HomeController@showUser');
 
         $this->getCfar($route)->dispatch();
 
@@ -57,11 +56,11 @@ class CfarTest extends \PHPUnit_Framework_TestCase
 
     public function testCfarCallsRightControllerAndDispatchesToTheDefaultMethod()
     {
-        $controller = '\\Adelowo\\Cfar\\Tests\\Fixtures\\HomeController';
+        $controller = '\Adelowo\Cfar\Tests\Fixtures\HomeController';
 
         $route = $this->route->path("users")
             ->attributes([])
-            ->handler($controller);
+            ->handler('\Adelowo\Cfar\Tests\Fixtures\HomeController@indexAction');
 
         $this->getCfar($route)->dispatch();
         $cfarController = $this->cfar->getController();

@@ -74,12 +74,17 @@ class CfarTest extends \PHPUnit_Framework_TestCase
         $route = $this->route->path('/users/10/adelowo')
             ->attributes(["10", "adelowo"])
             ->handler(UnKnownController::class)
-            ->extras(["listener" => "showUser"]);
+            ->extras(["listener" => "showUser"]); //This is discarded as of >=1.2 and the `indexAction` method would be invoked.
 
         try {
-            $this->getCfar($route)->dispatch();
+
+            $cfar = $this->getCfar($route);
+            $cfar->dispatch();
+
         } catch (CfarException $e) {
             $this->assertStringStartsWith("Invalid route declaration", $e->getMessage());
+
+            $this->assertEquals("indexAction" , $cfar->getMethod());
         }
     }
 

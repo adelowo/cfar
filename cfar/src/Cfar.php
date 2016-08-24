@@ -100,7 +100,6 @@ class Cfar
     public function dispatch()
     {
         try {
-
             list($this->controller, $this->method) = $this->getRegisteredControllerAndMethod();
 
 
@@ -112,10 +111,10 @@ class Cfar
                     new $this->controller($this->container),
                     $this->parameters
                 );
-
         } catch (\ReflectionException $e) {
             throw new CfarException(
-                CfarException::INVALID_DECLARATION . ". " . $e->getMessage());
+                CfarException::INVALID_DECLARATION . ". " . $e->getMessage()
+            );
         }
     }
 
